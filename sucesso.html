@@ -1,0 +1,401 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identificação Ativada — SAFE KIDS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>SAFE</h1>
+        <p>🛡️ Identificação ativada</p>
+    </header>
+
+    <main>
+
+        <section class="sucesso">
+
+            <div class="icone-sucesso">
+                ✓
+            </div>
+
+            <h2>Identificação ativada com sucesso!</h2>
+
+            <p>
+                A identificação da criança está ativa e vinculada
+                aos responsáveis cadastrados.
+            </p>
+
+        </section>
+
+
+        <!-- IDENTIFICAÇÃO -->
+
+        <section class="identificacao">
+
+            <p>
+                <strong>Identificação:</strong>
+            </p>
+
+            <div class="codigo" id="codigo-identificacao">
+                SK-000001
+            </div>
+
+            <p class="encontrada">
+                ✓ Ativa
+            </p>
+
+        </section>
+
+
+        <!-- CRIANÇA -->
+
+        <section class="formulario">
+
+            <h2>👧 Criança</h2>
+
+            <div class="resumo">
+
+                <p>
+                    <strong>Nome:</strong>
+                    <span id="nome-crianca">-</span>
+                </p>
+
+                <p>
+                    <strong>Idade:</strong>
+                    <span id="idade-crianca">-</span>
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESPONSÁVEIS -->
+
+        <section class="formulario">
+
+            <h2>👨‍👩‍👧 Responsáveis cadastrados</h2>
+
+            <div class="resumo" id="lista-responsaveis">
+
+            </div>
+
+        </section>
+
+
+        <!-- ACESSO -->
+
+        <section class="formulario">
+
+            <h2>🔐 Acesso do responsável</h2>
+
+            <div class="resumo">
+
+                <p>
+                    O acesso foi criado com sucesso.
+                </p>
+
+                <p class="seguranca">
+                    ✓ Seus dados foram cadastrados com segurança.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- IMPORTANTE -->
+
+        <section class="aviso">
+
+            <h2>⚠️ Importante</h2>
+
+            <p>
+                Agora a identificação está pronta para ser utilizada.
+            </p>
+
+            <p>
+                Se alguém encontrar a criança e aproximar um celular
+                da identificação SAFE, poderá visualizar as informações
+                necessárias para entrar em contato com um dos
+                responsáveis cadastrados.
+            </p>
+
+        </section>
+
+
+        <!-- AÇÕES -->
+
+        <section class="acoes">
+
+            <button
+                type="button"
+                class="botao-testar"
+                onclick="testarIdentificacao()"
+            >
+                📱 TESTAR MINHA IDENTIFICAÇÃO
+            </button>
+
+            <button
+                type="button"
+                class="botao-concluir"
+                onclick="concluir()"
+            >
+                CONCLUIR
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            SAFE — Aproximando quem ajuda de quem procura.
+        </p>
+
+    </footer>
+
+
+    <script>
+
+        function carregarDados() {
+
+            const dadosSalvos =
+                localStorage.getItem(
+                    "safeKidsIdentificacao"
+                );
+
+            if (!dadosSalvos) {
+
+                alert(
+                    "Não foi possível encontrar os dados da identificação."
+                );
+
+                return;
+
+            }
+
+            const identificacao =
+                JSON.parse(dadosSalvos);
+
+
+            // IDENTIFICAÇÃO
+
+            document.getElementById(
+                "codigo-identificacao"
+            ).textContent =
+                identificacao.codigo;
+
+
+            // CRIANÇA
+
+            document.getElementById(
+                "nome-crianca"
+            ).textContent =
+                identificacao.crianca.nome;
+
+
+            document.getElementById(
+                "idade-crianca"
+            ).textContent =
+                identificacao.crianca.idade +
+                " anos";
+
+
+            // RESPONSÁVEIS
+
+            const lista =
+                document.getElementById(
+                    "lista-responsaveis"
+                );
+
+            lista.innerHTML = "";
+
+
+            adicionarResponsavel(
+                lista,
+                identificacao.responsaveis.pai
+            );
+
+
+            adicionarResponsavel(
+                lista,
+                identificacao.responsaveis.mae
+            );
+
+
+            if (
+                identificacao.responsaveis.outro
+            ) {
+
+                adicionarResponsavel(
+                    lista,
+                    identificacao.responsaveis.outro
+                );
+
+            }
+
+        }
+
+
+        function adicionarResponsavel(
+            lista,
+            responsavel
+        ) {
+
+            if (
+                !responsavel ||
+                !responsavel.nome
+            ) {
+
+                return;
+
+            }
+
+
+            const contato =
+                document.createElement(
+                    "div"
+                );
+
+            contato.className =
+                "contato";
+
+
+            let parentesco = "";
+
+            if (
+                responsavel.parentesco
+            ) {
+
+                parentesco =
+                    " — " +
+                    responsavel.parentesco;
+
+            }
+
+
+            // Remove máscara do telefone
+
+            const celular =
+                (responsavel.celular || "")
+                .replace(/\D/g, "");
+
+
+            const whatsapp =
+                (responsavel.whatsapp || "")
+                .replace(/\D/g, "");
+
+
+            contato.innerHTML = `
+
+                <h3>👤 ${responsavel.tipo}</h3>
+
+                <p>
+                    ${responsavel.nome}${parentesco}
+                </p>
+
+                <div class="botoes-contato">
+
+                    <button
+                        type="button"
+                        onclick="ligar('${celular}')"
+                    >
+                        📞 Ligar
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="abrirWhatsApp('${whatsapp}')"
+                    >
+                        💬 WhatsApp
+                    </button>
+
+                </div>
+
+            `;
+
+
+            lista.appendChild(
+                contato
+            );
+
+        }
+
+
+        function ligar(numero) {
+
+            if (!numero) {
+
+                alert(
+                    "Número de telefone não cadastrado."
+                );
+
+                return;
+
+            }
+
+
+            window.location.href =
+                "tel:" + numero;
+
+        }
+
+
+        function abrirWhatsApp(numero) {
+
+            if (!numero) {
+
+                alert(
+                    "Número de WhatsApp não cadastrado."
+                );
+
+                return;
+
+            }
+
+
+            window.open(
+                "https://wa.me/55" + numero,
+                "_blank"
+            );
+
+        }
+
+
+        function testarIdentificacao() {
+
+            alert(
+                "Aproxime o celular da identificação SAFE para realizar o teste."
+            );
+
+        }
+
+
+        function concluir() {
+
+            alert(
+                "Cadastro concluído. Sua identificação SAFE está pronta para uso."
+            );
+
+        }
+
+
+        // Carrega os dados assim que a página abre
+
+        carregarDados();
+
+    </script>
+
+</body>
+
+</html>
+```

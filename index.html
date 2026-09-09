@@ -1,0 +1,285 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAFE KIDS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+
+        <h1>SAFE KIDS</h1>
+
+        <p>
+            Uma identificação para ajudar no reencontro.
+        </p>
+
+    </header>
+
+
+    <main>
+
+        <p>
+            Esta identificação pertence a uma criança.
+        </p>
+
+
+        <!-- DADOS DA CRIANÇA -->
+
+        <section class="dados-crianca">
+
+            <p>
+                <strong>Nome:</strong>
+                <span id="nome-crianca">
+                    -
+                </span>
+            </p>
+
+            <p>
+                <strong>Idade:</strong>
+                <span id="idade-crianca">
+                    -
+                </span>
+            </p>
+
+        </section>
+
+
+        <!-- RESPONSÁVEIS -->
+
+        <section>
+
+            <h2>
+                Escolha um responsável para entrar em contato:
+            </h2>
+
+            <div id="lista-responsaveis">
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            SAFE — Aproximando quem ajuda de quem procura.
+        </p>
+
+    </footer>
+
+
+    <script>
+
+        function carregarIdentificacao() {
+
+            const dadosSalvos =
+                localStorage.getItem(
+                    "safeKidsIdentificacao"
+                );
+
+
+            if (!dadosSalvos) {
+
+                document.getElementById(
+                    "nome-crianca"
+                ).textContent =
+                    "Identificação não encontrada.";
+
+                return;
+
+            }
+
+
+            const identificacao =
+                JSON.parse(dadosSalvos);
+
+
+            // Verifica se a identificação está ativa
+
+            if (!identificacao.ativa) {
+
+                document.getElementById(
+                    "nome-crianca"
+                ).textContent =
+                    "Identificação inativa.";
+
+                return;
+
+            }
+
+
+            // CRIANÇA
+
+            document.getElementById(
+                "nome-crianca"
+            ).textContent =
+                identificacao.crianca.nome;
+
+
+            document.getElementById(
+                "idade-crianca"
+            ).textContent =
+                identificacao.crianca.idade +
+                " anos";
+
+
+            // RESPONSÁVEIS
+
+            const lista =
+                document.getElementById(
+                    "lista-responsaveis"
+                );
+
+            lista.innerHTML = "";
+
+
+            adicionarResponsavel(
+                lista,
+                identificacao.responsaveis.pai
+            );
+
+
+            adicionarResponsavel(
+                lista,
+                identificacao.responsaveis.mae
+            );
+
+
+            if (
+                identificacao.responsaveis.outro
+            ) {
+
+                adicionarResponsavel(
+                    lista,
+                    identificacao.responsaveis.outro
+                );
+
+            }
+
+        }
+
+
+        function adicionarResponsavel(
+            lista,
+            responsavel
+        ) {
+
+            if (
+                !responsavel ||
+                !responsavel.nome
+            ) {
+
+                return;
+
+            }
+
+
+            const celular =
+                (responsavel.celular || "")
+                .replace(/\D/g, "");
+
+
+            const whatsapp =
+                (responsavel.whatsapp || "")
+                .replace(/\D/g, "");
+
+
+            const contato =
+                document.createElement(
+                    "section"
+                );
+
+
+            contato.innerHTML = `
+
+                <p>
+                    <strong>
+                        ${responsavel.tipo}
+                    </strong>
+                </p>
+
+                <p>
+                    ${responsavel.nome}
+                </p>
+
+                <button
+                    type="button"
+                    onclick="ligar('${celular}')"
+                >
+                    📞 LIGAR PARA ${responsavel.nome.toUpperCase()}
+                </button>
+
+                <button
+                    type="button"
+                    onclick="abrirWhatsApp('${whatsapp}')"
+                >
+                    💬 ENVIAR WHATSAPP
+                </button>
+
+            `;
+
+
+            lista.appendChild(
+                contato
+            );
+
+        }
+
+
+        function ligar(numero) {
+
+            if (!numero) {
+
+                alert(
+                    "Número de telefone não cadastrado."
+                );
+
+                return;
+
+            }
+
+
+            window.location.href =
+                "tel:" + numero;
+
+        }
+
+
+        function abrirWhatsApp(numero) {
+
+            if (!numero) {
+
+                alert(
+                    "Número de WhatsApp não cadastrado."
+                );
+
+                return;
+
+            }
+
+
+            window.open(
+                "https://wa.me/55" + numero,
+                "_blank"
+            );
+
+        }
+
+
+        carregarIdentificacao();
+
+    </script>
+
+</body>
+
+</html>
+```

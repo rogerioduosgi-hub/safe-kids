@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ativar Identificação — SAFE KIDS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>SAFE</h1>
+        <p>🛡️ Ative sua identificação</p>
+    </header>
+
+
+    <main>
+
+        <p class="intro">
+            Vamos associar esta identificação à sua criança e aos responsáveis.
+        </p>
+
+
+        <!-- IDENTIFICAÇÃO -->
+
+        <section class="identificacao">
+
+            <p>
+                <strong>Identificação:</strong>
+            </p>
+
+            <div class="codigo">
+                SK-000001
+            </div>
+
+            <p class="encontrada">
+                ✓ Identificação encontrada
+            </p>
+
+        </section>
+
+
+        <!-- DADOS DA CRIANÇA -->
+
+        <section class="formulario">
+
+            <h2>👧 Dados da criança</h2>
+
+
+            <label for="nome-crianca">
+                Nome ou apelido:
+            </label>
+
+            <input
+                type="text"
+                id="nome-crianca"
+                placeholder="Digite o nome ou apelido"
+            >
+
+
+            <label for="idade">
+                Idade:
+            </label>
+
+            <input
+                type="number"
+                id="idade"
+                placeholder="Idade"
+                min="0"
+                max="18"
+            >
+
+
+            <label>
+                Foto:
+            </label>
+
+            <button
+                type="button"
+                class="botao-secundario"
+            >
+                Adicionar foto
+            </button>
+
+            <p class="opcional">
+                Opcional
+            </p>
+
+        </section>
+
+
+        <!-- RESPONSÁVEIS -->
+
+        <section class="formulario">
+
+            <h2>👨‍👩‍👧 Responsáveis</h2>
+
+            <p class="orientacao">
+                Cadastre os responsáveis que poderão ser contatados
+                caso a criança seja encontrada.
+            </p>
+
+
+            <!-- PAI -->
+
+            <div class="responsavel">
+
+                <h3>👨 Pai</h3>
+
+
+                <label for="pai-nome">
+                    Nome:
+                </label>
+
+                <input
+                    type="text"
+                    id="pai-nome"
+                    placeholder="Nome do pai"
+                >
+
+
+                <label for="pai-celular">
+                    Celular:
+                </label>
+
+                <input
+                    type="tel"
+                    id="pai-celular"
+                    placeholder="(00) 00000-0000"
+                    maxlength="15"
+                    oninput="formatarTelefone(this)"
+                >
+
+
+                <label for="pai-whatsapp">
+                    WhatsApp:
+                </label>
+
+                <input
+                    type="tel"
+                    id="pai-whatsapp"
+                    placeholder="(00) 00000-0000"
+                    maxlength="15"
+                    oninput="formatarTelefone(this)"
+                >
+
+            </div>
+
+
+            <!-- MÃE -->
+
+            <div class="responsavel">
+
+                <h3>👩 Mãe</h3>
+
+
+                <label for="mae-nome">
+                    Nome:
+                </label>
+
+                <input
+                    type="text"
+                    id="mae-nome"
+                    placeholder="Nome da mãe"
+                >
+
+
+                <label for="mae-celular">
+                    Celular:
+                </label>
+
+                <input
+                    type="tel"
+                    id="mae-celular"
+                    placeholder="(00) 00000-0000"
+                    maxlength="15"
+                    oninput="formatarTelefone(this)"
+                >
+
+
+                <label for="mae-whatsapp">
+                    WhatsApp:
+                </label>
+
+                <input
+                    type="tel"
+                    id="mae-whatsapp"
+                    placeholder="(00) 00000-0000"
+                    maxlength="15"
+                    oninput="formatarTelefone(this)"
+                >
+
+            </div>
+
+
+            <!-- OUTRO RESPONSÁVEL -->
+
+            <div id="outros-responsaveis"></div>
+
+
+            <button
+                type="button"
+                class="botao-adicionar"
+                id="botao-adicionar"
+                onclick="adicionarResponsavel()"
+            >
+                + Adicionar outro responsável
+            </button>
+
+        </section>
+
+
+        <!-- CRIAR ACESSO -->
+
+        <section class="formulario">
+
+            <h2>🔐 Criar acesso</h2>
+
+
+            <label for="senha">
+                Senha:
+            </label>
+
+            <input
+                type="password"
+                id="senha"
+                placeholder="Crie uma senha"
+            >
+
+
+            <label for="confirmar-senha">
+                Confirmar senha:
+            </label>
+
+            <input
+                type="password"
+                id="confirmar-senha"
+                placeholder="Digite a senha novamente"
+            >
+
+
+            <label class="termos">
+
+                <input
+                    type="checkbox"
+                    id="aceite"
+                >
+
+                <span>
+                    Li e concordo com os Termos de Uso e com a
+                    Política de Privacidade.
+                </span>
+
+            </label>
+
+
+            <button
+                type="button"
+                class="botao-ativar"
+                onclick="ativarIdentificacao()"
+            >
+                ATIVAR IDENTIFICAÇÃO
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            SAFE — Aproximando quem ajuda de quem procura.
+        </p>
+
+    </footer>
+
+
+    <script>
+
+        // =========================================
+        // CONTADOR DE RESPONSÁVEIS
+        // =========================================
+
+        let contadorResponsaveis = 0;
+
+
+        // =========================================
+        // FORMATAÇÃO DOS TELEFONES
+        // =========================================
+
+        function formatarTelefone(campo) {
+
+            const posicaoOriginal =
+                campo.selectionStart;
+
+            const valorOriginal =
+                campo.value;
+
+            const numerosAntes =
+                valorOriginal
+                    .substring(0, posicaoOriginal)
+                    .replace(/\D/g, "")
+                    .length;
+
+            let numeros =
+                valorOriginal.replace(/\D/g, "");
+
+            numeros =
+                numeros.substring(0, 11);
+
+
+            let formatado = "";
+
+
+            if (numeros.length <= 2) {
+
+                formatado = numeros;
+
+            } else if (numeros.length <= 7) {
+
+                formatado =
+                    "(" +
+                    numeros.substring(0, 2) +
+                    ") " +
+                    numeros.substring(2);
+
+            } else {
+
+                formatado =
+                    "(" +
+                    numeros.substring(0, 2) +
+                    ") " +
+                    numeros.substring(2, 7) +
+                    "-" +
+                    numeros.substring(7);
+
+            }
+
+
+            campo.value = formatado;
+
+
+            let novaPosicao = 0;
+            let quantidadeNumeros = 0;
+
+
+            for (
+                let i = 0;
+                i < formatado.length;
+                i++
+            ) {
+
+                if (/\d/.test(formatado[i])) {
+
+                    quantidadeNumeros++;
+
+                }
+
+
+                if (
+                    quantidadeNumeros >=
+                    numerosAntes
+                ) {
+
+                    novaPosicao = i + 1;
+
+                    break;
+
+                }
+
+            }
+
+
+            if (
+                numerosAntes >=
+                numeros.length
+            ) {
+
+                novaPosicao =
+                    formatado.length;
+
+            }
+
+
+            campo.setSelectionRange(
+                novaPosicao,
+                novaPosicao
+            );
+
+        }
+
+
+        // =========================================
+        // ADICIONAR OUTRO RESPONSÁVEL
+        // =========================================
+
+        function adicionarResponsavel() {
+
+            if (
+                contadorResponsaveis >= 1
+            ) {
+
+                return;
+
+            }
+
+
+            contadorResponsaveis++;
+
+
+            const container =
+                document.getElementById(
+                    "outros-responsaveis"
+                );
+
+
+            const novoResponsavel =
+                document.createElement("div");
+
+
+            novoResponsavel.className =
+                "responsavel";
+
+
+            novoResponsavel.innerHTML = `
+
+                <h3>👤 Outro responsável</h3>
+
+
+                <label>
+                    Nome:
+                </label>
+
+                <input
+                    type="text"
+                    id="outro-nome"
+                    placeholder="Nome do responsável"
+                >
+
+
+                <label>
+                    Parentesco:
+                </label>
+
+                <input
+                    type="text"
+                    id="outro-parentesco"
+                    placeholder="Ex.: Avó, tio, responsável"
+                >
+
+
+                <label>
+                    Celular:
+                </label>
+
+                <input
+                    type="tel"
+                    id="outro-celular"
+                    placeholder="(00) 00000-0000"
+                    maxlength="15"
+                    oninput="formatarTelefone(this)"
+                >
+
+
+                <label>
+                    WhatsApp:
+                </label>
+
+                <input
+                    type="tel"
+                    id="outro-whatsapp"
+                    placeholder="(00) 00000-0000"
+                    maxlength="15"
+                    oninput="formatarTelefone(this)"
+                >
+
+            `;
+
+
+            container.appendChild(
+                novoResponsavel
+            );
+
+
+            document
+                .getElementById(
+                    "botao-adicionar"
+                )
+                .style.display = "none";
+
+        }
+
+
+        // =========================================
+        // PEGAR VALOR DO CAMPO
+        // =========================================
+
+        function pegarValor(id) {
+
+            const campo =
+                document.getElementById(id);
+
+            if (!campo) {
+
+                return "";
+
+            }
+
+            return campo.value.trim();
+
+        }
+
+
+        // =========================================
+        // ATIVAR IDENTIFICAÇÃO
+        // =========================================
+
+        function ativarIdentificacao() {
+
+            const senha =
+                pegarValor("senha");
+
+
+            const confirmarSenha =
+                pegarValor("confirmar-senha");
+
+
+            const aceite =
+                document.getElementById(
+                    "aceite"
+                ).checked;
+
+
+            // Verificar senha
+
+            if (
+                senha === "" ||
+                confirmarSenha === ""
+            ) {
+
+                alert(
+                    "Digite e confirme sua senha."
+                );
+
+                return;
+
+            }
+
+
+            // Verificar confirmação
+
+            if (
+                senha !== confirmarSenha
+            ) {
+
+                alert(
+                    "As senhas não são iguais."
+                );
+
+                return;
+
+            }
+
+
+            // Verificar termos
+
+            if (!aceite) {
+
+                alert(
+                    "É necessário aceitar os Termos de Uso e a Política de Privacidade."
+                );
+
+                return;
+
+            }
+
+
+            // =====================================
+            // MONTAR DADOS DA CRIANÇA
+            // =====================================
+
+            const dadosCrianca = {
+
+                nome:
+                    pegarValor("nome-crianca"),
+
+                idade:
+                    pegarValor("idade")
+
+            };
+
+
+            // =====================================
+            // MONTAR DADOS DO PAI
+            // =====================================
+
+            const pai = {
+
+                tipo: "Pai",
+
+                nome:
+                    pegarValor("pai-nome"),
+
+                celular:
+                    pegarValor("pai-celular"),
+
+                whatsapp:
+                    pegarValor("pai-whatsapp")
+
+            };
+
+
+            // =====================================
+            // MONTAR DADOS DA MÃE
+            // =====================================
+
+            const mae = {
+
+                tipo: "Mãe",
+
+                nome:
+                    pegarValor("mae-nome"),
+
+                celular:
+                    pegarValor("mae-celular"),
+
+                whatsapp:
+                    pegarValor("mae-whatsapp")
+
+            };
+
+
+            // =====================================
+            // OUTRO RESPONSÁVEL
+            // =====================================
+
+            let outro = null;
+
+
+            if (
+                contadorResponsaveis >= 1
+            ) {
+
+                outro = {
+
+                    tipo:
+                        "Outro responsável",
+
+                    nome:
+                        pegarValor("outro-nome"),
+
+                    parentesco:
+                        pegarValor(
+                            "outro-parentesco"
+                        ),
+
+                    celular:
+                        pegarValor(
+                            "outro-celular"
+                        ),
+
+                    whatsapp:
+                        pegarValor(
+                            "outro-whatsapp"
+                        )
+
+                };
+
+            }
+
+
+            // =====================================
+            // DADOS COMPLETOS DA IDENTIFICAÇÃO
+            // =====================================
+
+            const identificacao = {
+
+                codigo: "SK-000001",
+
+                ativa: true,
+
+                crianca:
+                    dadosCrianca,
+
+                responsaveis: {
+
+                    pai:
+                        pai,
+
+                    mae:
+                        mae,
+
+                    outro:
+                        outro
+
+                }
+
+            };
+
+
+            // =====================================
+            // GUARDAR OS DADOS NO NAVEGADOR
+            // =====================================
+
+            localStorage.setItem(
+                "safeKidsIdentificacao",
+                JSON.stringify(
+                    identificacao
+                )
+            );
+
+
+            // =====================================
+            // IR PARA A TELA 3
+            // =====================================
+
+            window.location.href =
+                "sucesso.html";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
